@@ -5,3 +5,5 @@ This library adds several features to music and sound playback, including the fo
 * Lateral position fade.
 * Random sound selection.
 * Sound file memory optimization.
+
+Full readme in progress.
