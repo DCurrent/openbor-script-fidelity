@@ -131,7 +131,6 @@ void dc_fidelity_quick_play(int type)
 {
 	void	ent;
 	int		sample_id;		// Sample ID to play.
-	void	axis;
 	float	pos_x;
 	int		volume_left;
 	int		volume_right;
@@ -148,8 +147,7 @@ void dc_fidelity_quick_play(int type)
 
 	// Get entity X position.
 	ent = dc_fidelity_get_entity();
-	axis = get_entity_property(ent, "position_coordinates");
-	pos_x = get_axis_principal_float_property(axis, "x");
+	pos_x = get_entity_property(ent, "position_x");
 
 	// Get adjusted volumes.
 	if (dc_fidelity_get_sound_location_balance())
