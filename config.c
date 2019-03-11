@@ -51,7 +51,7 @@ void dc_fidelity_get_entity()
 	{
 		result = getlocalvar("self");
 	}
-
+	
 	return result;
 }
 

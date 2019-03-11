@@ -73,8 +73,20 @@ int dc_fidelity_get_model_sound(char model, int type)
 	// Get the model's list array.
 	models = getglobalvar(DC_FIDELITY_VAR_KEY_SOUND_MODELS);
 
+	// Model has no list array or something went wrong. 
+	if (!models)
+	{
+		return -1;
+	}
+
 	// Get array of sound types for a model.
 	types = get(models, model);
+
+	// No sound types for this model or something went wrong. 
+	if (!types)
+	{
+		return -1;
+	}
 
 	// Get array of sound indexes for a sound type.
 	indexes = get(types, type);
