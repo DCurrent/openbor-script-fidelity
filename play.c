@@ -1,6 +1,11 @@
 #include "data/scripts/dc_fidelity/config.h"
+
 #import "data/scripts/dc_fidelity/config.c"
+#import "data/scripts/dc_fidelity/entity.c"
 #import "data/scripts/dc_fidelity/adjustments.c"
+#import "data/scripts/dc_fidelity/model.c"
+
+
 
 // Caskey, Damon V.
 // 2018-10-23
@@ -45,6 +50,8 @@ int dc_fidelity_sound_chance()
 	percentage = chance * 100;
 
 	// Get random 0-100.
+	//dc_d20_set_instance(DC_FIDELITY_VAR_KEY_BASE_ID);
+	
 	dc_d20_set_range_upper(100);
 	random = dc_d20_random_int();
 
@@ -71,10 +78,22 @@ int dc_fidelity_get_model_sound(char model, int type)
 	int size;		// Size of array.
 
 	// Get the model's list array.
-	models = getglobalvar(DC_FIDELITY_VAR_KEY_SOUND_MODELS);
+	models = dc_fidelity_get_model_list();
+
+	// Model has no list array or something went wrong. 
+	if (!models)
+	{
+		return -1;
+	}
 
 	// Get array of sound types for a model.
 	types = get(models, model);
+
+	// No sound types for this model or something went wrong. 
+	if (!types)
+	{
+		return -1;
+	}
 
 	// Get array of sound indexes for a sound type.
 	indexes = get(types, type);

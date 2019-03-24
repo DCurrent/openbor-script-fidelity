@@ -1,20 +1,21 @@
 #include "data/scripts/dc_fidelity/config.h"
 
 #import "data/scripts/dc_fidelity/config.c"
+#import "data/scripts/dc_fidelity/instance.c"
+#import "data/scripts/dc_fidelity/model.c"
 
-void dc_fidelitys_setup(char model, int type, char file)
+void dc_fidelity_setup(char model, int type, char file)
 {
 	void models;	// Key - model, Value - Sound types array.
 	void types;		// Key - Sound Type, Value - Sound index array.
 	void indexes;	// Key - Numeric, Value - Sound file index.
 	int  sample_id;	// Sample ID loaded to element.
-
-
+	
 	int size;	// Array size.
 	int i;		// Loop index.
 
 	// Get the model's list array.
-	models = getglobalvar(DC_FIDELITY_VAR_KEY_SOUND_MODELS);
+	models = dc_fidelity_get_model_list();
 
 	// Initialize array if it doesn't exist.
 	if (!models)
@@ -24,7 +25,7 @@ void dc_fidelitys_setup(char model, int type, char file)
 
 		// Store pointer to array in a globalvar for
 		// future access.
-		setglobalvar(DC_FIDELITY_VAR_KEY_SOUND_MODELS, models);
+		dc_fidelity_set_model_list(models);
 	}
 
 	// Get array of sound types for a model.
@@ -40,13 +41,6 @@ void dc_fidelitys_setup(char model, int type, char file)
 		// the parent array.
 		set(models, model, types);
 	}
-
-	//void type_elements
-
-	//if (type_elements)
-	//{
-
-	//}
 
 	// Get array of sound indexes for a sound type.
 	indexes = get(types, type);
@@ -64,7 +58,7 @@ void dc_fidelitys_setup(char model, int type, char file)
 
 	// Get the array size, we can use this as
 	// the index since we want to add an element.
-	size		= size(indexes);
+	size = size(indexes);
 
 	// Load the sample and get ID.
 	sample_id	= loadsample(file);
@@ -94,14 +88,17 @@ void dc_fidelitys_setup(char model, int type, char file)
 // 2018-10-22
 // 
 // Test if a sound loaded properly.
-void dc_fidelitys_loaded_test(char model, int type, int index)
+void dc_fidelity_loaded_test(char model, int type, int index)
 {
 	void models;	// Key - model, Value - Sound types array.
 	void types;		// Key - Sound Type, Value - Sound index array.
 	void indexes;	// Key - Numeric, Value - Sound file index.
+	char id;		// ID key for variables.
+
+	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_MODELS;
 
 	// Get the model's list array.
-	models = getglobalvar(DC_FIDELITY_VAR_KEY_SOUND_MODELS);
+	models = getglobalvar(id);
 
 	// Get array of sound types for a model.
 	types = get(models, model);
@@ -112,7 +109,7 @@ void dc_fidelitys_loaded_test(char model, int type, int index)
 	// Get array of sound indexes for a sound type.
 	index = get(indexes, index);
 
-	log("\n\n dc_fidelitys_loaded_test");
+	log("\n\n dc_fidelity_loaded_test");
 	log("\n");
 	
 	log("\t");
@@ -132,5 +129,4 @@ void dc_fidelitys_loaded_test(char model, int type, int index)
 	log("\n");
 
 	playsample(index, DC_FIDELITY_DEFAULT_SOUND_PRIORITY, DC_FIDELITY_DEFAULT_SOUND_VOLUME_LEFT, DC_FIDELITY_DEFAULT_SOUND_VOLUME_RIGHT, DC_FIDELITY_DEFAULT_SOUND_SPEED, DC_FIDELITY_DEFAULT_SOUND_LOOP);
-
 }
