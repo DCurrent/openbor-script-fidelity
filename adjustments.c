@@ -13,7 +13,6 @@ int dc_fidelity_volume_adjusted_horizontal(float position, int volume)
 	// Positions are absolute, so we need to subtract
 	// the level scroll position to get where we 
 	// are on the screen.
-
 	position -= openborvariant("xpos");
 
 	// Get median of the screen resolution.
@@ -24,7 +23,7 @@ int dc_fidelity_volume_adjusted_horizontal(float position, int volume)
 	//
 	// Far left, approaching 0.
 	// Center, 1. 
-	// Far right, approaching 2.  
+	// Far right, approaching 2.
 	factor = position / center;
 
 	// Divide the orginal volume in half. We then mutiply by
