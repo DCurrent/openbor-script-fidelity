@@ -1,5 +1,7 @@
 #include "data/scripts/dc_fidelity/config.h"
 
+#import "data/scripts/dc_fidelity/instance.c"
+
 // User config. These functions allow a module author to 
 // temporarily override the default configuration as 
 // needed. We use localvars, so any override is local 
@@ -18,38 +20,33 @@
 // 1.0 = Always.
 void dc_fidelity_set_sound_chance(float value)
 {
-	setlocalvar(DC_FIDELITY_VAR_KEY_SOUND_CHANCE, value);
+	char id;
+
+	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_CHANCE;
+
+	// If requested value is the same as default, 
+	// don't waste memory for a variable since we 
+	// fall back to default on NULL() anyway.
+	if (DC_FIDELITY_DEFAULT_SOUND_CHANCE == value)
+	{
+		value = NULL();
+	}
+
+	setlocalvar(id, value);
 }
 
 void dc_fidelity_get_sound_chance()
 {
-	void result = getlocalvar(DC_FIDELITY_VAR_KEY_SOUND_CHANCE);
+	void result;
+	char id;
+
+	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_CHANCE;
+
+	result = getlocalvar(id);
 
 	if (!result)
 	{
 		result = DC_FIDELITY_DEFAULT_SOUND_CHANCE;
-	}
-
-	return result;
-}
-
-// Entity is the target entity when searching for
-// a model to play sounds, an on screen location
-// for stereo effects, and anything else that 
-// requires a target entity reference. Defaults
-// to the calling entity.
-void dc_fidelity_set_entity(void value)
-{
-	setlocalvar(DC_FIDELITY_VAR_KEY_SOUND_ENTITY, value);
-}
-
-void dc_fidelity_get_entity()
-{
-	void result = getlocalvar(DC_FIDELITY_VAR_KEY_SOUND_ENTITY);
-
-	if (!result)
-	{
-		result = getlocalvar("self");
 	}
 	
 	return result;
@@ -61,12 +58,28 @@ void dc_fidelity_get_entity()
 // a selected sound type.
 void dc_fidelity_set_sound_element(int value)
 {
-	setlocalvar(DC_FIDELITY_VAR_KEY_SOUND_SPEED, value);
+	char id;
+
+	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_SPEED;
+
+	// If requested value is the same as default, 
+	// don't waste memory for a variable since we 
+	// fall back to default on NULL() anyway.
+	if (DC_FIDELITY_DEFAULT_SOUND_SPEED == value)
+	{
+		value = NULL();
+	}
+
+	setlocalvar(id, value);
 }
 
 int dc_fidelity_get_sound_element()
 {
-	int result = getlocalvar(DC_FIDELITY_VAR_KEY_SOUND_ELEMENT);
+	char id;
+
+	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_ELEMENT;
+
+	int result = getlocalvar(id);
 
 	if (typeof(result) != openborconstant("VT_INTEGER"))
 	{
@@ -82,12 +95,28 @@ int dc_fidelity_get_sound_element()
 // effect.
 void dc_fidelity_set_sound_location_balance(int value)
 {
-	setlocalvar(DC_FIDELITY_VAR_KEY_SOUND_LOCATION_BALANCE, value);
+	char id;
+
+	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_LOCATION_BALANCE;
+
+	// If requested value is the same as default, 
+	// don't waste memory for a variable since we 
+	// fall back to default on NULL() anyway.
+	if (DC_FIDELITY_DEFAULT_SOUND_LOCATION_BALANCE == value)
+	{
+		value = NULL();
+	}
+
+	setlocalvar(id, value);
 }
 
 int dc_fidelity_get_sound_location_balance()
 {
-	int result = getlocalvar(DC_FIDELITY_VAR_KEY_SOUND_LOCATION_BALANCE);
+	char id;
+
+	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_LOCATION_BALANCE;
+
+	int result = getlocalvar(id);
 
 	if (typeof(result) != openborconstant("VT_INTEGER"))
 	{
@@ -102,12 +131,28 @@ int dc_fidelity_get_sound_location_balance()
 // to create a distance based fade effect.
 void dc_fidelity_set_sound_location_fade(int value)
 {
-	setlocalvar(DC_FIDELITY_VAR_KEY_SOUND_LOCATION_FADE, value);
+	char id;
+
+	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_LOCATION_FADE;
+
+	// If requested value is the same as default, 
+	// don't waste memory for a variable since we 
+	// fall back to default on NULL() anyway.
+	if (DC_FIDELITY_DEFAULT_SOUND_LOCATION_FADE == value)
+	{
+		value = NULL();
+	}
+
+	setlocalvar(id, value);
 }
 
 int dc_fidelity_get_sound_location_fade()
 {
-	int result = getlocalvar(DC_FIDELITY_VAR_KEY_SOUND_LOCATION_FADE);
+	char id;
+
+	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_LOCATION_FADE;
+
+	int result = getlocalvar(id);
 
 	if (typeof(result) != openborconstant("VT_INTEGER"))
 	{
@@ -120,12 +165,28 @@ int dc_fidelity_get_sound_location_fade()
 // Sound looping on playback.
 void dc_fidelity_set_sound_loop(int value)
 {
-	setlocalvar(DC_FIDELITY_VAR_KEY_SOUND_LOOP, value);
+	char id;
+
+	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_LOOP;
+
+	// If requested value is the same as default, 
+	// don't waste memory for a variable since we 
+	// fall back to default on NULL() anyway.
+	if (DC_FIDELITY_DEFAULT_SOUND_LOOP == value)
+	{
+		value = NULL();
+	}
+
+	setlocalvar(id, value);
 }
 
 int dc_fidelity_get_sound_loop()
 {
-	int result = getlocalvar(DC_FIDELITY_VAR_KEY_SOUND_LOOP);
+	char id;
+
+	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_LOOP;
+
+	int result = getlocalvar(id);
 
 	if (typeof(result) != openborconstant("VT_INTEGER"))
 	{
@@ -138,12 +199,28 @@ int dc_fidelity_get_sound_loop()
 // Priority of sound when played on same channel.
 void dc_fidelity_set_sound_priority(int value)
 {
-	setlocalvar(DC_FIDELITY_VAR_KEY_SOUND_PRIORITY, value);
+	char id;
+
+	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_PRIORITY;
+
+	// If requested value is the same as default, 
+	// don't waste memory for a variable since we 
+	// fall back to default on NULL() anyway.
+	if (DC_FIDELITY_DEFAULT_SOUND_PRIORITY == value)
+	{
+		value = NULL();
+	}
+
+	setlocalvar(id, value);
 }
 
 int dc_fidelity_get_sound_priority()
 {
-	int result = getlocalvar(DC_FIDELITY_VAR_KEY_SOUND_PRIORITY);
+	char id;
+
+	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_PRIORITY;
+
+	int result = getlocalvar(id);
 
 	if (typeof(result) != openborconstant("VT_INTEGER"))
 	{
@@ -160,13 +237,29 @@ int dc_fidelity_get_sound_priority()
 // sounds at lower speeds as greater damage is inflicted. 
 void dc_fidelity_set_sound_speed(int value)
 {
-	setlocalvar(DC_FIDELITY_VAR_KEY_SOUND_SPEED, value);
+	char id;
+
+	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_SPEED;
+
+	// If requested value is the same as default, 
+	// don't waste memory for a variable since we 
+	// fall back to default on NULL() anyway.
+	if (DC_FIDELITY_DEFAULT_SOUND_SPEED == value)
+	{
+		value = NULL();
+	}
+
+	setlocalvar(id, value);
 }
 
 // Get specified speed, or default if not available.
 int dc_fidelity_get_sound_speed()
 {
-	int result = getlocalvar(DC_FIDELITY_VAR_KEY_SOUND_SPEED);
+	char id;
+
+	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_SPEED;
+
+	int result = getlocalvar(id);
 
 	if (typeof(result) != openborconstant("VT_INTEGER"))
 	{
@@ -181,12 +274,28 @@ int dc_fidelity_get_sound_speed()
 // are made. 
 void dc_fidelity_set_sound_volume_main_left(int value)
 {
-	setlocalvar(DC_FIDELITY_VAR_KEY_SOUND_VOLUME_MAIN_LEFT, value);
+	char id;
+
+	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_VOLUME_MAIN_LEFT;
+
+	// If requested value is the same as default, 
+	// don't waste memory for a variable since we 
+	// fall back to default on NULL() anyway.
+	if (DC_FIDELITY_DEFAULT_SOUND_VOLUME_LEFT == value)
+	{
+		value = NULL();
+	}
+
+	setlocalvar(id, value);
 }
 
 int dc_fidelity_get_sound_volume_main_left()
 {
-	int result = getlocalvar(DC_FIDELITY_VAR_KEY_SOUND_VOLUME_MAIN_LEFT);
+	char id;
+
+	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_VOLUME_MAIN_LEFT;
+
+	int result = getlocalvar(id);
 
 	if (typeof(result) != openborconstant("VT_INTEGER"))
 	{
@@ -198,12 +307,28 @@ int dc_fidelity_get_sound_volume_main_left()
 
 void dc_fidelity_set_sound_volume_main_right(int value)
 {
-	setlocalvar(DC_FIDELITY_VAR_KEY_SOUND_VOLUME_MAIN_RIGHT, value);
+	char id;
+
+	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_VOLUME_MAIN_RIGHT;
+
+	// If requested value is the same as default, 
+	// don't waste memory for a variable since we 
+	// fall back to default on NULL() anyway.
+	if (DC_FIDELITY_DEFAULT_SOUND_VOLUME_RIGHT == value)
+	{
+		value = NULL();
+	}
+
+	setlocalvar(id, value);
 }
 
 int dc_fidelity_get_sound_volume_main_right()
 {
-	int result = getlocalvar(DC_FIDELITY_VAR_KEY_SOUND_VOLUME_MAIN_RIGHT);
+	char id;
+
+	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_VOLUME_MAIN_RIGHT;
+
+	int result = getlocalvar(id);
 
 	if (typeof(result) != openborconstant("VT_INTEGER"))
 	{
