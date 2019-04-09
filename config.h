@@ -88,18 +88,18 @@
 // Variable keys.
 #define DC_FIDELITY_VAR_KEY_INSTANCE						DC_FIDELITY_BASE_ID + 0
 #define DC_FIDELITY_VAR_KEY_ENT								DC_FIDELITY_BASE_ID + 1				
-#define DC_FIDELITY_VAR_KEY_SOUND_CHANCE					DC_FIDELITY_BASE_ID + 2
-#define DC_FIDELITY_VAR_KEY_SOUND_ELEMENT					DC_FIDELITY_BASE_ID + 3
-#define DC_FIDELITY_VAR_KEY_SOUND_ENTITY					DC_FIDELITY_BASE_ID + 4
-#define DC_FIDELITY_VAR_KEY_SOUND_LOCATION_BALANCE			DC_FIDELITY_BASE_ID + 5
-#define DC_FIDELITY_VAR_KEY_SOUND_LOCATION_FADE				DC_FIDELITY_BASE_ID + 6
-#define DC_FIDELITY_VAR_KEY_SOUND_LOOP						DC_FIDELITY_BASE_ID + 7
-#define DC_FIDELITY_VAR_KEY_SOUND_CATEGORY					DC_FIDELITY_BASE_ID + 8		// Global var used to store list of models -> types ->indexes.
+#define DC_FIDELITY_VAR_KEY_SOUND_CATEGORY					DC_FIDELITY_BASE_ID + 2		// Global var used to store list of categories -> types ->indexes.
+#define DC_FIDELITY_VAR_KEY_SOUND_CHANCE					DC_FIDELITY_BASE_ID + 3
+#define DC_FIDELITY_VAR_KEY_SOUND_ELEMENT					DC_FIDELITY_BASE_ID + 4
+#define DC_FIDELITY_VAR_KEY_SOUND_ENTITY					DC_FIDELITY_BASE_ID + 5
+#define DC_FIDELITY_VAR_KEY_SOUND_LOCATION_BALANCE			DC_FIDELITY_BASE_ID + 6
+#define DC_FIDELITY_VAR_KEY_SOUND_LOCATION_FADE				DC_FIDELITY_BASE_ID + 7
+#define DC_FIDELITY_VAR_KEY_SOUND_LOOP						DC_FIDELITY_BASE_ID + 8
 #define DC_FIDELITY_VAR_KEY_SOUND_PRIORITY					DC_FIDELITY_BASE_ID + 9
 #define DC_FIDELITY_VAR_KEY_SOUND_SPEED						DC_FIDELITY_BASE_ID + 10
 #define DC_FIDELITY_VAR_KEY_SOUND_VOLUME_MAIN_LEFT			DC_FIDELITY_BASE_ID + 11	// Left channel volume before any adjustments are made.
 #define DC_FIDELITY_VAR_KEY_SOUND_VOLUME_MAIN_RIGHT			DC_FIDELITY_BASE_ID + 12	// Right channel volume before any adjustments are made.
-#define DC_FIDELITY_VAR_KEY_THE_END							12							// Should always be last, with a value one higher than previous key ID.
+#define DC_FIDELITY_VAR_KEY_THE_END							13							// Should always be last, with a value one higher than previous key ID.
 
 #endif // !DC_FIDELITY_CONFIG
 
