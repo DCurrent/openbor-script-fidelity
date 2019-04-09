@@ -3,7 +3,7 @@
 #import "data/scripts/dc_fidelity/sound_config.c"
 #import "data/scripts/dc_fidelity/entity.c"
 #import "data/scripts/dc_fidelity/adjustments.c"
-#import "data/scripts/dc_fidelity/model.c"
+#import "data/scripts/dc_fidelity/category.c"
 
 
 // Caskey, Damon V.

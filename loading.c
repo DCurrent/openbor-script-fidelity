@@ -2,7 +2,7 @@
 
 #import "data/scripts/dc_fidelity/sound_config.c"
 #import "data/scripts/dc_fidelity/instance.c"
-#import "data/scripts/dc_fidelity/model.c"
+#import "data/scripts/dc_fidelity/category.c"
 
 void dc_fidelity_setup(char model, int type, char file)
 {
