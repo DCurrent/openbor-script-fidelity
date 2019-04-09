@@ -25,7 +25,7 @@ void dc_fidelity_setup(char model, int type, char file)
 
 		// Store pointer to array in a globalvar for
 		// future access.
-		dc_fidelity_set_model_list(models);
+		dc_fidelity_set_category_list(models);
 	}
 
 	// Get array of sound types for a model.
