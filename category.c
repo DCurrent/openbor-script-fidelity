@@ -40,8 +40,3 @@ void dc_fidelity_set_category_list(void value)
 
 	setglobalvar(id, value);
 }
-
-void dc_fidelity_initialize_category_list()
-{
-
-}
