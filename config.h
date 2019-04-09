@@ -75,7 +75,7 @@
 // Default values.
 #define DC_FIDELITY_DEFAULT_INSTANCE						0
 #define DC_FIDELITY_DEFAULT_ENT								getlocalvar("self")
-#define DC_FIDELITY_DEFAULT_MODELS							NULL()
+#define DC_FIDELITY_DEFAULT_CATEGORY_LIST							NULL()
 #define DC_FIDELITY_DEFAULT_SOUND_CHANCE					1.0
 #define DC_FIDELITY_DEFAULT_SOUND_LOCATION_BALANCE			1		// Adjust volume based on a given X position in relation to screen.
 #define DC_FIDELITY_DEFAULT_SOUND_LOCATION_FADE				0		// Adjust volume based on a given Z position in relation to screen.

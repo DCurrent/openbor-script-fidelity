@@ -15,7 +15,7 @@ void dc_fidelity_get_category_list()
 
 	if (typeof(result) != openborconstant("VT_PTR"))
 	{
-		result = DC_FIDELITY_DEFAULT_MODELS;
+		result = DC_FIDELITY_DEFAULT_CATEGORY_LIST;
 	}
 
 	return result;
@@ -33,7 +33,7 @@ void dc_fidelity_set_model_list(void value)
 	// make sure variable is deleted instead. We fall
 	// back to default for empty vars, so may as
 	// well save the memory.
-	if (value == DC_FIDELITY_DEFAULT_MODELS)
+	if (value == DC_FIDELITY_DEFAULT_CATEGORY_LIST)
 	{
 		value = NULL();
 	}
