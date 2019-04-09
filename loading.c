@@ -1,6 +1,6 @@
 #include "data/scripts/dc_fidelity/config.h"
 
-#import "data/scripts/dc_fidelity/config.c"
+#import "data/scripts/dc_fidelity/sound_config.c"
 #import "data/scripts/dc_fidelity/instance.c"
 #import "data/scripts/dc_fidelity/model.c"
 
@@ -15,7 +15,7 @@ void dc_fidelity_setup(char model, int type, char file)
 	int i;		// Loop index.
 
 	// Get the model's list array.
-	models = dc_fidelity_get_model_list();
+	models = dc_fidelity_get_category_list();
 
 	// Initialize array if it doesn't exist.
 	if (!models)
@@ -95,7 +95,7 @@ void dc_fidelity_loaded_test(char model, int type, int index)
 	void indexes;	// Key - Numeric, Value - Sound file index.
 	char id;		// ID key for variables.
 
-	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_MODELS;
+	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_CATEGORY;
 
 	// Get the model's list array.
 	models = getglobalvar(id);

@@ -3,7 +3,7 @@
 #import "data/scripts/dc_fidelity/instance.c"
 
 // Get
-void dc_fidelity_get_model_list()
+void dc_fidelity_get_category_list()
 {
 	char id;
 	void result;
@@ -41,7 +41,7 @@ void dc_fidelity_set_model_list(void value)
 	setglobalvar(id, value);
 }
 
-void dc_fidelity_initialize_model_list()
+void dc_fidelity_initialize_category_list()
 {
 
 }

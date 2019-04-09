@@ -60,7 +60,7 @@ void dc_fidelity_free_instance()
 	for (i = 0; i < DC_FIDELITY_VAR_KEY_THE_END; i++)
 	{
 		// Concatenate the variable ID.
-		id = instance + DC_FIDELITY_VAR_KEY_BASE_ID + i;
+		id = instance + DC_FIDELITY_BASE_ID + i;
 
 		// Delete variable.
 		setlocalvar(id, NULL());
@@ -81,14 +81,14 @@ void dc_fidelity_dump_instance()
 	instance = dc_fidelity_get_instance();
 
 	// Log base name and instance.
-	log("\n\n " + DC_FIDELITY_VAR_KEY_BASE_ID + " dump:");
+	log("\n\n " + DC_FIDELITY_BASE_ID + " dump:");
 	log("\n\t " + "Instance: " + instance);
 
 	// Loop from 0 to end count of instance variables.
 	for (i = 0; i < DC_FIDELITY_VAR_KEY_THE_END; i++)
 	{
 		// Concatenate the variable ID.
-		id = instance + DC_FIDELITY_VAR_KEY_BASE_ID + i;
+		id = instance + DC_FIDELITY_BASE_ID + i;
 
 		// Log ID.
 		log("\n\t " + id + ": ");

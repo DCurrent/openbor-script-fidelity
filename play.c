@@ -1,10 +1,9 @@
 #include "data/scripts/dc_fidelity/config.h"
 
-#import "data/scripts/dc_fidelity/config.c"
+#import "data/scripts/dc_fidelity/sound_config.c"
 #import "data/scripts/dc_fidelity/entity.c"
 #import "data/scripts/dc_fidelity/adjustments.c"
 #import "data/scripts/dc_fidelity/model.c"
-
 
 
 // Caskey, Damon V.
@@ -50,7 +49,7 @@ int dc_fidelity_sound_chance()
 	percentage = chance * 100;
 
 	// Get random 0-100.
-	//dc_d20_set_instance(DC_FIDELITY_VAR_KEY_BASE_ID);
+	//dc_d20_set_instance(DC_FIDELITY_BASE_ID);
 	
 	dc_d20_set_range_upper(100);
 	random = dc_d20_random_int();
@@ -70,32 +69,27 @@ int dc_fidelity_sound_chance()
 // Get a sample ID from sound type and a known model.
 int dc_fidelity_get_model_sound(char model, int type)
 {
-	void ent;		// Target entity.
-	int result;		// Sound index.
-	void models;	// Models array.
-	void types;		// Sound types array.
-	void indexes;	// Sound indexes array.
-	int size;		// Size of array.
+	void ent;			// Target entity.
+	int result;			// Sound index.
+	void categories;	// Array of categories (usually models) array.
+	void types;			// Sound types array.
+	void indexes;		// Sound indexes array.
+	int size;			// Size of array.
 
 	// Get the model's list array.
-	models = dc_fidelity_get_model_list();
+	categories = dc_fidelity_get_category_list();
 
-	// Model has no list array or something went wrong. 
-	if (!models)
-	{
-		return -1;
-	}
-
-	// Model has no list array or something went wrong. 
-	if (!models)
+	// Model has no list array.
+	if (!categories)
 	{
 		return -1;
 	}
 
 	// Get array of sound types for a model.
-	types = get(models, model);
+	types = get(categories, model);
 
-	// No sound types for this model or something went wrong. 
+	// No sound types for this model. Try global. If we still find
+	// nothing, then exit. 
 	if (!types)
 	{
 		return -1;
@@ -109,6 +103,7 @@ int dc_fidelity_get_model_sound(char model, int type)
 
 	return result;
 }
+
 
 // Caskey, Damon V.
 // 2018-10-23
