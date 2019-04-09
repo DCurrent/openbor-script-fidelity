@@ -24,7 +24,7 @@ int dc_fidelity_get_entity_sound(int type)
 
 	// Now that we have a model, run model sound function 
 	// to get a sample ID.
-	sample_id = dc_fidelity_get_model_sound(model, type);
+	sample_id = dc_fidelity_find_category_sound(model, type);
 
 	return sample_id;
 }
@@ -66,41 +66,46 @@ int dc_fidelity_sound_chance()
 // Caskey, Damon V.
 // 2018-10-23
 //
-// Get a sample ID from sound type and a known model.
-int dc_fidelity_get_model_sound(char model, int type)
+// Get a sample ID from sound type and a known category.
+int dc_fidelity_find_category_sound(char category, int type)
 {
 	void ent;			// Target entity.
 	int result;			// Sound index.
-	void categories;	// Array of categories (usually models) array.
+	void category_list;	// Array of categories (usually models) array.
 	void types;			// Sound types array.
 	void indexes;		// Sound indexes array.
 	int size;			// Size of array.
 
 	// Get the model's list array.
-	categories = dc_fidelity_get_category_list();
+	category_list = dc_fidelity_get_category_list();
 
-	// Model has no list array.
-	if (!categories)
+	// No list of categories. We can't go any further.
+	if (!category_list)
 	{
 		return -1;
 	}
 
-	// Get array of sound types for a model.
-	types = get(categories, model);
+	// Each category is an array of types. Here we get the
+	// type array pointer.
+	types = get(category_list, category);
 
-	// No sound types for this model. Try global. If we still find
-	// nothing, then exit. 
+	// If there's no entry in the categroy list for this
+	// requested category, we don't have a list of types.
 	if (!types)
 	{
 		return -1;
 	}
 
-	// Get array of sound indexes for a sound type.
+	// Each type is a list of of sound indexes. Here we get
+	// the sound array pointer..
 	indexes = get(types, type);
 
-	// Get a sound index (sample id) from indexes array.
+	// Send the sound array pointer to sound selection function.
+	// It will choose an element from the array either manually 
+	// or randomly, and return the sound index.
 	result = dc_fidelity_select_sample_id(indexes);
 
+	// We now have a sound index to return.
 	return result;
 }
 
