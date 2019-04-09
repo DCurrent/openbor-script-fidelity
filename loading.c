@@ -4,74 +4,79 @@
 #import "data/scripts/dc_fidelity/instance.c"
 #import "data/scripts/dc_fidelity/category.c"
 
-void dc_fidelity_setup(char model, int type, char file)
+// Caskey, Damon V.
+// 2018-10-23
+//
+// Load a sound file and place its sample ID with designated category 
+// and type into the sound array for later use.
+void dc_fidelity_setup(char category, int type, char file)
 {
-	void models;	// Key - model, Value - Sound types array.
-	void types;		// Key - Sound Type, Value - Sound index array.
-	void indexes;	// Key - Numeric, Value - Sound file index.
-	int  sample_id;	// Sample ID loaded to element.
+	void category_list;	// Key - Category, Value - Sound types array.
+	void type_list;		// Key - Sound Type, Value - Sound index array.
+	void index_list;	// Key - Numeric, Value - Sound file index.
+	int  sample_id;		// Sample ID loaded to element.
 	
 	int size;	// Array size.
 	int i;		// Loop index.
 
-	// Get the model's list array.
-	models = dc_fidelity_get_category_list();
+	// Get the category list array.
+	category_list = dc_fidelity_get_category_list();
 
 	// Initialize array if it doesn't exist.
-	if (!models)
+	if (!category_list)
 	{
 		// Create the array.
-		models = array(0);
+		category_list = array(0);
 
 		// Store pointer to array in a globalvar for
 		// future access.
-		dc_fidelity_set_category_list(models);
+		dc_fidelity_set_category_list(category_list);
 	}
 
-	// Get array of sound types for a model.
-	types = get(models, model);
+	// Get array of sound types for a category.
+	type_list = get(category_list, category);
 
 	// Initialize array if it doesn't exist.
-	if (!types)
+	if (!type_list)
 	{
 		// Create the array.
-		types = array(0);
+		type_list = array(0);
 
 		// Store pointer to array in an element of
 		// the parent array.
-		set(models, model, types);
+		set(category_list, category, type_list);
 	}
 
 	// Get array of sound indexes for a sound type.
-	indexes = get(types, type);
+	index_list = get(type_list, type);
 
 	// Initialize array if it doesn't exist.
-	if (!indexes)
+	if (!index_list)
 	{
 		// Create the array.
-		indexes = array(0);
+		index_list = array(0);
 
 		// Store pointer to array in an element of
 		// the parent array.
-		set(types, type, indexes);
+		set(type_list, type, index_list);
 	}
 
 	// Get the array size, we can use this as
 	// the index since we want to add an element.
-	size = size(indexes);
+	size = size(index_list);
 
 	// Load the sample and get ID.
 	sample_id	= loadsample(file);
 
 	// Add new array element and populate its
 	// value with sample ID.
-	add(indexes, size, sample_id);
+	add(index_list, size, sample_id);
 
 	// Output to the log.
 	log("\n Sound sample loaded: ");
 	log("\n");
 	log("\t");
-	log("Model:\t\t" + model);
+	log("Category:\t" + category);
 	log("\n");
 	log("\t");
 	log("Type:\t\t" + type);
@@ -88,40 +93,40 @@ void dc_fidelity_setup(char model, int type, char file)
 // 2018-10-22
 // 
 // Test if a sound loaded properly.
-void dc_fidelity_loaded_test(char model, int type, int index)
+void dc_fidelity_loaded_test(char category, int type, int index)
 {
-	void models;	// Key - model, Value - Sound types array.
-	void types;		// Key - Sound Type, Value - Sound index array.
-	void indexes;	// Key - Numeric, Value - Sound file index.
-	char id;		// ID key for variables.
+	void category_list;	// Key - model, Value - Sound types array.
+	void type_list;		// Key - Sound Type, Value - Sound index array.
+	void index_list;	// Key - Numeric, Value - Sound file index.
+	char id;			// ID key for variables.
 
 	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_CATEGORY;
 
-	// Get the model's list array.
-	models = getglobalvar(id);
+	// Get the category list array.
+	category_list = getglobalvar(id);
 
-	// Get array of sound types for a model.
-	types = get(models, model);
-
-	// Get array of sound indexes for a sound type.
-	indexes = get(types, type);
+	// Get array of sound types for a category.
+	type_list = get(category_list, category);
 
 	// Get array of sound indexes for a sound type.
-	index = get(indexes, index);
+	index_list = get(type_list, type);
+
+	// Get array of sound indexes for a sound type.
+	index = get(index_list, index);
 
 	log("\n\n dc_fidelity_loaded_test");
 	log("\n");
 	
 	log("\t");
-	log("Models Array: " + models);
+	log("Categories Array: " + category_list);
 	log("\n");
 
 	log("\t");
-	log("Types Array: " + types);
+	log("Types Array: " + type_list);
 	log("\n");
 
 	log("\t");
-	log("Indexes Array: " + indexes);
+	log("Indexes Array: " + index_list);
 	log("\n");
 
 	log("\t");
