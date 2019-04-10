@@ -8,6 +8,24 @@
 // be unique vs all other libraries. Try to keep it short.
 #define DC_FIDELITY_BASE_ID	 "dcfid"
 
+// Logging. Controls what processes get logged for debugging. 
+// Uses a bit masked macro, so add desired options to the
+// control flag. Note some "fail" conditions may be intentional, 
+// such as calling for a sound type a category does not have
+// and falling back to the global category.
+
+// Logging options.
+#define DC_FIDELITY_LOG_LOAD				1	// Loading and setup of sound files.
+#define DC_FIDELITY_LOG_FAIL_CATEGORY		2	// Log when a specified category is not found. 
+#define DC_FIDELITY_LOG_FAIL_TYPE			4	// Log when a specified type is not found in category.
+#define DC_FIDELITY_LOG_FAIL_INDEX			8	// Log when a specified type does not have any indexes.
+#define DC_FIDELITY_LOG_FAIL_SAMPLE			16	// Log when a specified index does not contain a valid sample ID.
+#define DC_FIDELITY_LOG_PLAY				32	// Log when sound plays.
+#define DC_FIDELITY_LOG_UNLOAD				64	// Log unloading of sounds.
+
+// Logging control flag.
+#define DC_FIDELITY_LOG						DC_FIDELITY_LOG_LOAD + DC_FIDELITY_LOG_FAIL_CATEGORY + DC_FIDELITY_LOG_FAIL_TYPE + DC_FIDELITY_LOG_FAIL_INDEX + DC_FIDELITY_LOG_FAIL_SAMPLE + DC_FIDELITY_LOG_PLAY + DC_FIDELITY_LOG_UNLOAD
+
 // Sound Categories
 //
 // Normally sound categories are given the name of a model. 
@@ -123,9 +141,8 @@
 #define DC_FIDELITY_TYPE_VOICE_YES					65	// Agree. - "Sure.", "Yes.", ...
 
 // Options.
-#define DC_FIDELITY_INDEX_RANDOM			-1		// Seek a random sound index from sound type.
-#define DC_FIDELITY_SAMPLE_NONE				-1
-#define DC_FIDELITY_FAILURE_LOG				0
+#define DC_FIDELITY_INDEX_RANDOM	-1		// Seek a random sound index from sound type.
+#define DC_FIDELITY_SAMPLE_NONE		-1		// No sample, or invalid sample.		
 
 // Default values.
 #define DC_FIDELITY_DEFAULT_INSTANCE						0
