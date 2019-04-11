@@ -1,7 +1,5 @@
 #include "data/scripts/dc_fidelity/config.h"
 
-#import "data/scripts/dc_fidelity/instance.c"
-
 // Entity is the target entity when searching for
 // a model to play sounds, an on screen location
 // for stereo effects, and anything else that 

@@ -1,7 +1,5 @@
 #include "data/scripts/dc_fidelity/config.h"
 
-#import "data/scripts/dc_fidelity/instance.c"
-
 // Try global category when specific category doesn't have sound type.
 
 // Get

@@ -4,7 +4,6 @@
 #import "data/scripts/dc_fidelity/category.c"
 #import "data/scripts/dc_fidelity/entity.c"
 #import "data/scripts/dc_fidelity/global.c"
-#import "data/scripts/dc_fidelity/instance.c"
 #import "data/scripts/dc_fidelity/sound_config.c"
 
 // Caskey, Damon V.

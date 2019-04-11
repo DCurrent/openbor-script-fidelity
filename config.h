@@ -1,8 +1,9 @@
 #ifndef DC_FIDELITY_CONFIG
 
-#include "data/scripts/dc_d20/main.c"
-
 #define DC_FIDELITY_CONFIG 1
+
+#include "data/scripts/dc_instance/main.c"
+#include "data/scripts/dc_d20/main.c"
 
 // Name of library. Used mainly as a base for variable IDs. Must
 // be unique vs all other libraries. Try to keep it short.
@@ -145,7 +146,6 @@
 #define DC_FIDELITY_SAMPLE_NONE		-1		// No sample, or invalid sample.		
 
 // Default values.
-#define DC_FIDELITY_DEFAULT_INSTANCE						0
 #define DC_FIDELITY_DEFAULT_ENT								getlocalvar("self")
 #define DC_FIDELITY_DEFAULT_CATEGORY_LIST					NULL()
 #define DC_FIDELITY_DEFAULT_GLOBAL_FALLBACK					1		// Try global category when specific category doesn't have sound type.
@@ -174,6 +174,16 @@
 #define DC_FIDELITY_VAR_KEY_SOUND_VOLUME_MAIN_LEFT			DC_FIDELITY_BASE_ID + 12	// Left channel volume before any adjustments are made.
 #define DC_FIDELITY_VAR_KEY_SOUND_VOLUME_MAIN_RIGHT			DC_FIDELITY_BASE_ID + 13	// Right channel volume before any adjustments are made.
 #define DC_FIDELITY_VAR_KEY_THE_END							14							// Should always be last, with a value one higher than previous key ID.
+
+// Instance control. 
+#define dc_fidelity_get_instance()		dc_instance_get(DC_FIDELITY_VAR_KEY_INSTANCE)
+#define dc_fidelity_set_instance(value) dc_instance_set(DC_FIDELITY_VAR_KEY_INSTANCE, value)
+#define dc_fidelity_reset_instance()	dc_instance_reset(DC_FIDELITY_BASE_ID, DC_FIDELITY_VAR_KEY_INSTANCE, DC_FIDELITY_VAR_KEY_THE_END)
+#define dc_fidelity_free_instance()		dc_instance_free(DC_FIDELITY_BASE_ID, DC_FIDELITY_VAR_KEY_INSTANCE, DC_FIDELITY_VAR_KEY_THE_END)
+#define dc_fidelity_dump_instance()		dc_instance_dump(DC_FIDELITY_BASE_ID, DC_FIDELITY_VAR_KEY_INSTANCE, DC_FIDELITY_VAR_KEY_THE_END)
+#define dc_fidelity_export_instance()	dc_instance_export(DC_FIDELITY_BASE_ID, DC_FIDELITY_VAR_KEY_INSTANCE, DC_FIDELITY_VAR_KEY_THE_END)
+#define dc_fidelity_import_instance()	dc_instance_import(DC_FIDELITY_BASE_ID, DC_FIDELITY_VAR_KEY_INSTANCE, DC_FIDELITY_VAR_KEY_THE_END)
+#define dc_fidelity_free_export()		dc_instance_free_export(DC_FIDELITY_BASE_ID, DC_FIDELITY_VAR_KEY_INSTANCE, DC_FIDELITY_VAR_KEY_THE_END)
 
 #endif // !DC_FIDELITY_CONFIG
 

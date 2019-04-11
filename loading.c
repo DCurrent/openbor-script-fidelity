@@ -1,7 +1,6 @@
 #include "data/scripts/dc_fidelity/config.h"
 
 #import "data/scripts/dc_fidelity/sound_config.c"
-#import "data/scripts/dc_fidelity/instance.c"
 #import "data/scripts/dc_fidelity/category.c"
 
 // Caskey, Damon V.

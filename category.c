@@ -1,7 +1,5 @@
 #include "data/scripts/dc_fidelity/config.h"
 
-#import "data/scripts/dc_fidelity/instance.c"
-
 // Get
 void dc_fidelity_get_category_list()
 {

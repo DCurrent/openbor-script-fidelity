@@ -1,7 +1,5 @@
 #include "data/scripts/dc_fidelity/config.h"
 
-#import "data/scripts/dc_fidelity/instance.c"
-
 // User config. These functions allow a module author to 
 // temporarily override the default configuration as 
 // needed. We use localvars, so any override is local 
