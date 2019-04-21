@@ -20,7 +20,7 @@ void dc_fidelity_set_sound_chance(float value)
 {
 	char id;
 
-	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_CHANCE;
+	id = dc_fidelity_get_instance() + DC_FIDELITY_MEMBER_SOUND_CHANCE;
 
 	// If requested value is the same as default, 
 	// don't waste memory for a variable since we 
@@ -38,7 +38,7 @@ void dc_fidelity_get_sound_chance()
 	void result;
 	char id;
 
-	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_CHANCE;
+	id = dc_fidelity_get_instance() + DC_FIDELITY_MEMBER_SOUND_CHANCE;
 
 	result = getlocalvar(id);
 
@@ -58,7 +58,7 @@ void dc_fidelity_set_sound_element(int value)
 {
 	char id;
 
-	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_SPEED;
+	id = dc_fidelity_get_instance() + DC_FIDELITY_MEMBER_SOUND_SPEED;
 
 	// If requested value is the same as default, 
 	// don't waste memory for a variable since we 
@@ -75,50 +75,13 @@ int dc_fidelity_get_sound_element()
 {
 	char id;
 
-	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_ELEMENT;
+	id = dc_fidelity_get_instance() + DC_FIDELITY_MEMBER_SOUND_ELEMENT;
 
 	int result = getlocalvar(id);
 
 	if (typeof(result) != openborconstant("VT_INTEGER"))
 	{
 		result = DC_FIDELITY_INDEX_RANDOM;
-	}
-
-	return result;
-}
-
-// Enables auto balance. As a location moves horizontaly
-// in relation to screen position, volume balance is 
-// adjusted to create a true location based stereo
-// effect.
-void dc_fidelity_set_sound_location_balance(int value)
-{
-	char id;
-
-	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_LOCATION_BALANCE;
-
-	// If requested value is the same as default, 
-	// don't waste memory for a variable since we 
-	// fall back to default on NULL() anyway.
-	if (DC_FIDELITY_DEFAULT_SOUND_LOCATION_BALANCE == value)
-	{
-		value = NULL();
-	}
-
-	setlocalvar(id, value);
-}
-
-int dc_fidelity_get_sound_location_balance()
-{
-	char id;
-
-	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_LOCATION_BALANCE;
-
-	int result = getlocalvar(id);
-
-	if (typeof(result) != openborconstant("VT_INTEGER"))
-	{
-		result = DC_FIDELITY_DEFAULT_SOUND_LOCATION_BALANCE;
 	}
 
 	return result;
@@ -131,7 +94,7 @@ void dc_fidelity_set_sound_location_fade(int value)
 {
 	char id;
 
-	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_LOCATION_FADE;
+	id = dc_fidelity_get_instance() + DC_FIDELITY_MEMBER_SOUND_LOCATION_FADE;
 
 	// If requested value is the same as default, 
 	// don't waste memory for a variable since we 
@@ -148,7 +111,7 @@ int dc_fidelity_get_sound_location_fade()
 {
 	char id;
 
-	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_LOCATION_FADE;
+	id = dc_fidelity_get_instance() + DC_FIDELITY_MEMBER_SOUND_LOCATION_FADE;
 
 	int result = getlocalvar(id);
 
@@ -165,7 +128,7 @@ void dc_fidelity_set_sound_loop(int value)
 {
 	char id;
 
-	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_LOOP;
+	id = dc_fidelity_get_instance() + DC_FIDELITY_MEMBER_SOUND_LOOP;
 
 	// If requested value is the same as default, 
 	// don't waste memory for a variable since we 
@@ -182,7 +145,7 @@ int dc_fidelity_get_sound_loop()
 {
 	char id;
 
-	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_LOOP;
+	id = dc_fidelity_get_instance() + DC_FIDELITY_MEMBER_SOUND_LOOP;
 
 	int result = getlocalvar(id);
 
@@ -199,7 +162,7 @@ void dc_fidelity_set_sound_priority(int value)
 {
 	char id;
 
-	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_PRIORITY;
+	id = dc_fidelity_get_instance() + DC_FIDELITY_MEMBER_SOUND_PRIORITY;
 
 	// If requested value is the same as default, 
 	// don't waste memory for a variable since we 
@@ -216,7 +179,7 @@ int dc_fidelity_get_sound_priority()
 {
 	char id;
 
-	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_PRIORITY;
+	id = dc_fidelity_get_instance() + DC_FIDELITY_MEMBER_SOUND_PRIORITY;
 
 	int result = getlocalvar(id);
 
@@ -237,7 +200,7 @@ void dc_fidelity_set_sound_speed(int value)
 {
 	char id;
 
-	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_SPEED;
+	id = dc_fidelity_get_instance() + DC_FIDELITY_MEMBER_SOUND_SPEED;
 
 	// If requested value is the same as default, 
 	// don't waste memory for a variable since we 
@@ -255,7 +218,7 @@ int dc_fidelity_get_sound_speed()
 {
 	char id;
 
-	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_SPEED;
+	id = dc_fidelity_get_instance() + DC_FIDELITY_MEMBER_SOUND_SPEED;
 
 	int result = getlocalvar(id);
 
@@ -274,7 +237,7 @@ void dc_fidelity_set_sound_volume_main_left(int value)
 {
 	char id;
 
-	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_VOLUME_MAIN_LEFT;
+	id = dc_fidelity_get_instance() + DC_FIDELITY_MEMBER_SOUND_VOLUME_MAIN_LEFT;
 
 	// If requested value is the same as default, 
 	// don't waste memory for a variable since we 
@@ -291,7 +254,7 @@ int dc_fidelity_get_sound_volume_main_left()
 {
 	char id;
 
-	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_VOLUME_MAIN_LEFT;
+	id = dc_fidelity_get_instance() + DC_FIDELITY_MEMBER_SOUND_VOLUME_MAIN_LEFT;
 
 	int result = getlocalvar(id);
 
@@ -307,7 +270,7 @@ void dc_fidelity_set_sound_volume_main_right(int value)
 {
 	char id;
 
-	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_VOLUME_MAIN_RIGHT;
+	id = dc_fidelity_get_instance() + DC_FIDELITY_MEMBER_SOUND_VOLUME_MAIN_RIGHT;
 
 	// If requested value is the same as default, 
 	// don't waste memory for a variable since we 
@@ -324,7 +287,7 @@ int dc_fidelity_get_sound_volume_main_right()
 {
 	char id;
 
-	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_VOLUME_MAIN_RIGHT;
+	id = dc_fidelity_get_instance() + DC_FIDELITY_MEMBER_SOUND_VOLUME_MAIN_RIGHT;
 
 	int result = getlocalvar(id);
 

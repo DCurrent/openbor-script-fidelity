@@ -5,6 +5,7 @@
 #import "data/scripts/dc_fidelity/entity.c"
 #import "data/scripts/dc_fidelity/global.c"
 #import "data/scripts/dc_fidelity/sound_config.c"
+#import "data/scripts/dc_fidelity/timed.c"
 
 // Caskey, Damon V.
 // 2018-10-23
@@ -63,7 +64,7 @@ int dc_fidelity_sound_chance()
 	// Get random 0-100.
 	//dc_d20_set_instance(DC_FIDELITY_BASE_ID);
 	
-	dc_d20_set_range_upper(100);
+	dc_d20_set_range_max(100);
 	random = dc_d20_random_int();
 
 	if (percentage >= random)
@@ -100,9 +101,6 @@ int dc_fidelity_find_category_sound(char category, int type)
 	// type array pointer.
 	type_list = get(category_list, category);
 
-	log("\n\t category: " + category);
-	log("\n\t type_list: " + type_list);
-
 	// If there's no entry in the categroy list for this
 	// requested category, we don't have a list of types.
 	if (!type_list)
@@ -114,8 +112,6 @@ int dc_fidelity_find_category_sound(char category, int type)
 	// the sound array pointer.
 	index_list = get(type_list, type);		
 
-	log("\n\t type: " + type);
-	log("\n\t type_list: " + index_list);
 
 	// Send the sound array pointer to sound selection function.
 	// It will choose an element from the array either manually 
@@ -161,7 +157,7 @@ int dc_fidelity_select_sample_id(void index_list)
 		size = size(index_list);
 		size--;
 
-		dc_d20_set_range_upper(size);		
+		dc_d20_set_range_max(size);		
 
 		element = dc_d20_random_int();
 	}
@@ -179,19 +175,56 @@ int dc_fidelity_select_sample_id(void index_list)
 // 2018-10-14
 //
 // Play requested sample with X axis based stereo.
-void dc_fidelity_quick_play(int type)
+int dc_fidelity_quick_play(int type)
 {
-	void	ent;
 	int		sample_id;		// Sample ID to play.
-	float	pos_x;
-	int		volume_left;
-	int		volume_right;
 
 	// If random chance doesn't pass, exit now.
 	if (!dc_fidelity_sound_chance())
 	{
 		return;
 	}
+
+	// Get a sample ID.
+	sample_id = dc_fidelity_get_entity_sound(type);
+
+	// Send to play balanced and return result.
+	dc_fidelity_play_balanced(sample_id);
+}
+
+// Caskey, Damon V.
+// 2019-04-20
+//
+// Similar to quick play, but play the selected sound
+// with a dley by sending it to a timed list.
+void dc_fidelity_timed_play(int type, int delay)
+{
+	int		sample_id;		// Sample ID to play.
+
+	// If random chance doesn't pass, exit now.
+	if (!dc_fidelity_sound_chance())
+	{
+		return;
+	}
+
+	// Get a sample ID.
+	sample_id = dc_fidelity_get_entity_sound(type);
+
+	// Send sample to timed list for timed playback.
+	dc_fidelity_timed_setup(sample_id, delay);
+}
+
+// Caskey, Damon V.
+// 2019-04-20 (offloading from quick_play)
+//
+// Play sample with auto balance.
+int dc_fidelity_play_balanced(int sample_id)
+{
+	void ent;
+	float pos_x;
+
+	int volume_left;
+	int volume_right;
 
 	// Get set volumes.
 	volume_left = dc_fidelity_get_sound_volume_main_left();
@@ -204,15 +237,22 @@ void dc_fidelity_quick_play(int type)
 	// Get adjusted volumes.
 	if (dc_fidelity_get_sound_location_balance())
 	{
-		volume_left -= dc_fidelity_volume_adjusted_horizontal(pos_x, volume_left);
-		volume_right = dc_fidelity_volume_adjusted_horizontal(pos_x, volume_right);
+		volume_left -= dc_fidelity_auto_balance_volume(pos_x, volume_left);
+		volume_right = dc_fidelity_auto_balance_volume(pos_x, volume_right);
+
+		if (volume_left < 0)
+		{
+			volume_left = 0;
+		}
+
+		if (volume_right < 0)
+		{
+			volume_right = 0;
+		}
 	}
 
-	// Get a sample ID.
-	sample_id = dc_fidelity_get_entity_sound(type);
-
-	// Play the sample.
-	dc_playsample(sample_id, volume_left, volume_right);
+	// Send to play sample function.
+	return dc_fidelity_playsample(sample_id, volume_left, volume_right);
 }
 
 // Caskey, Damon V.
@@ -221,10 +261,10 @@ void dc_fidelity_quick_play(int type)
 // Wrapper for the OpenBOR playsample() function. Gets any leftover
 // config values before playing sound and verifies the sample ID.
 // There's no way to know id a sample ID is actually valid, but
-// it must be a positive integer, so we cna t least check that.
+// it must be a positive integer, so we can at least check that.
 //
 // Returns 1 if sample plays, 0 otherwise.
-int dc_playsample(int sample_id, int volume_left, int volume_right)
+int dc_fidelity_playsample(int sample_id, int volume_left, int volume_right)
 {
 
 	int priority;
@@ -252,3 +292,83 @@ int dc_playsample(int sample_id, int volume_left, int volume_right)
 
 	return 1;
 }
+
+// Caskey, Damon V.
+// 2018-10-23
+//
+// Check and play timed samples.
+void dc_fidelity_play_timed()
+{
+	void timed_list;
+	void timed_sample;
+	void ent;
+	int time;
+	int time_current;
+	int sample_id;
+	int size;
+	int i;
+	   
+	timed_list = dc_fidelity_get_timed_list();
+
+	// No list? Exit.
+	if (timed_list == NULL())
+	{
+		return;
+	}
+
+	size = size(timed_list);
+
+	// If the list is empty, remove it and get out.
+	if (size == 0)
+	{
+		free(timed_list);
+		dc_fidelity_set_timed_list(NULL());
+
+		return;
+	}
+
+	// Check each element for a sample.
+	for (i = 0; i < size; i++)
+	{
+
+		// Get pointer to timed sample.
+		timed_sample = get(timed_list, i);
+
+		if (timed_sample == NULL())
+		{
+			continue;
+		}
+
+		time = get(timed_sample, DC_FIDELITY_TIMED_SAMPLE_TIME);
+
+		// Time expired? Let's play the sound and delete its
+		// array and list entry.
+		time_current = openborvariant("elapsed_time");
+		
+		if (time < time_current)
+		{
+			sample_id = get(timed_sample, DC_FIDELITY_TIMED_SAMPLE_SAMPLE_ID);
+			ent = get(timed_sample, DC_FIDELITY_TIMED_SAMPLE_ENTITY);
+
+			if (!get_entity_property(ent, "exists"))
+			{
+				continue;
+			}
+
+			if (get_entity_property(ent, "dead"))
+			{
+				continue;
+			}
+
+			dc_fidelity_set_entity(ent);
+			dc_fidelity_play_balanced(sample_id);
+
+			// Destroy timed sample array and remove 
+			// element from list.
+			free(timed_sample);
+
+			delete(timed_list, i);
+		}
+	}
+}
+

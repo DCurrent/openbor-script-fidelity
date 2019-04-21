@@ -7,4 +7,5 @@
 #import "data/scripts/dc_fidelity/global.c"
 #import "data/scripts/dc_fidelity/loading.c"
 #import "data/scripts/dc_fidelity/play.c"
+#import "data/scripts/dc_fidelity/timed.c"
 

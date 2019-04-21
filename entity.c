@@ -14,7 +14,7 @@ void dc_fidelity_get_entity()
 	void result;
 
 	// Get id key.
-	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_ENT;
+	id = dc_fidelity_get_instance() + DC_FIDELITY_MEMBER_ENT;
 
 	result = getlocalvar(id);
 
@@ -32,7 +32,7 @@ void dc_fidelity_set_entity(void value)
 	char id;
 
 	// Get id key.
-	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_ENT;
+	id = dc_fidelity_get_instance() + DC_FIDELITY_MEMBER_ENT;
 
 	// If the value is same as default, then use
 	// make sure variable is deleted instead. We fall

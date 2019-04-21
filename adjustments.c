@@ -1,10 +1,47 @@
 #include "data/scripts/dc_fidelity/config.h"
 
+// Enables auto balance. As a location moves horizontaly
+// in relation to screen position, volume balance is 
+// adjusted to create a true location based stereo
+// effect.
+void dc_fidelity_set_sound_location_balance(int value)
+{
+	char id;
+
+	id = dc_fidelity_get_instance() + DC_FIDELITY_MEMBER_SOUND_LOCATION_BALANCE;
+
+	// If requested value is the same as default, 
+	// don't waste memory for a variable since we 
+	// fall back to default on NULL() anyway.
+	if (DC_FIDELITY_DEFAULT_SOUND_LOCATION_BALANCE == value)
+	{
+		value = NULL();
+	}
+
+	setlocalvar(id, value);
+}
+
+int dc_fidelity_get_sound_location_balance()
+{
+	char id;
+
+	id = dc_fidelity_get_instance() + DC_FIDELITY_MEMBER_SOUND_LOCATION_BALANCE;
+
+	int result = getlocalvar(id);
+
+	if (typeof(result) != openborconstant("VT_INTEGER"))
+	{
+		result = DC_FIDELITY_DEFAULT_SOUND_LOCATION_BALANCE;
+	}
+
+	return result;
+}
+
 // Caskey, Damon V. 
 // 2018-10-13
 //
 // Return an adjusted volume based on position in screen. 
-int dc_fidelity_volume_adjusted_horizontal(float position, int volume)
+int dc_fidelity_auto_balance_volume(float position, int volume)
 {
 	float	center;
 	float	result;

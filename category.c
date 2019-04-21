@@ -7,7 +7,7 @@ void dc_fidelity_get_category_list()
 	void result;
 
 	// Get id key.
-	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_CATEGORY;
+	id = dc_fidelity_get_instance() + DC_FIDELITY_MEMBER_SOUND_CATEGORY;
 
 	result = getglobalvar(id);
 
@@ -25,7 +25,7 @@ void dc_fidelity_set_category_list(void value)
 	char id;
 
 	// Get id key.
-	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_CATEGORY;
+	id = dc_fidelity_get_instance() + DC_FIDELITY_MEMBER_SOUND_CATEGORY;
 
 	// If the value is same as default, then use
 	// make sure variable is deleted instead. We fall

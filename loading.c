@@ -77,6 +77,9 @@ void dc_fidelity_setup(char category, int type, char file)
 		log("\n Sound sample loaded: ");
 		log("\n");
 		log("\t");
+		log("File:\t\t" + file);
+		log("\n");
+		log("\t");
 		log("Category:\t" + category);
 		log("\n");
 		log("\t");
@@ -102,7 +105,7 @@ void dc_fidelity_loaded_test(char category, int type, int index)
 	void index_list;	// Key - Numeric, Value - Sound file index.
 	char id;			// ID key for variables.
 
-	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_SOUND_CATEGORY;
+	id = dc_fidelity_get_instance() + DC_FIDELITY_MEMBER_SOUND_CATEGORY;
 
 	// Get the category list array.
 	category_list = getglobalvar(id);

@@ -9,7 +9,7 @@ void dc_fidelity_get_global_fallback()
 	void result;
 
 	// Get id key.
-	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_GLOBAL_FALLBACK;
+	id = dc_fidelity_get_instance() + DC_FIDELITY_MEMBER_GLOBAL_FALLBACK;
 
 	result = getlocalvar(id);
 
@@ -27,7 +27,7 @@ void dc_fidelity_set_global_fallback(void value)
 	char id;
 
 	// Get id key.
-	id = dc_fidelity_get_instance() + DC_FIDELITY_VAR_KEY_GLOBAL_FALLBACK;
+	id = dc_fidelity_get_instance() + DC_FIDELITY_MEMBER_GLOBAL_FALLBACK;
 
 	// If the value is same as default, then use
 	// make sure variable is deleted instead. We fall
