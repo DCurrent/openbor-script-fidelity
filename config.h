@@ -7,7 +7,7 @@
 
 // Name of library. Used mainly as a base for variable IDs. Must
 // be unique vs all other libraries. Try to keep it short.
-#define DC_FIDELITY_BASE_ID	 "dcfid"
+#define DC_FIDELITY_BASE_ID		"dcfid"
 
 // Logging. Controls what processes get logged for debugging. 
 // Uses a bit masked macro, so add desired options to the
@@ -16,17 +16,16 @@
 // and falling back to the global category.
 
 // Logging options.
-#define DC_FIDELITY_LOG_LOAD				1	// Loading and setup of sound files.
-#define DC_FIDELITY_LOG_FAIL_CATEGORY		2	// Specified category is not found. 
-#define DC_FIDELITY_LOG_FAIL_TYPE			4	// Specified type is not found in category.
-#define DC_FIDELITY_LOG_FAIL_INDEX			8	// Specified type does not have any indexes.
-#define DC_FIDELITY_LOG_FAIL_SAMPLE			16	// Specified index does not contain a valid sample ID.
-#define DC_FIDELITY_LOG_PLAY				32	// Sound plays.
-#define DC_FIDELITY_LOG_UNLOAD				64	// Unloading of sounds.
-#define DC_FIDELITY_LOG_TIMED_SETUP			128	// Set up timed delay sound.
+#define DC_FIDELITY_LOG_LOAD							1	// Loading and setup of sound files.
+#define DC_FIDELITY_LOG_BALANCE_INVALID_ENTITY			2	// Entity is not valid pointer (probably NULL). 
+#define DC_FIDELITY_LOG_CATEGORY_MISSING				4   // Category argument is blank. 
+#define DC_FIDELITY_LOG_CATEGORY_TYPE_NOT_FOUND			8	// Specified category (containing a type list) not found.
+#define DC_FIDELITY_LOG_PLAY							128	// Sound plays.
+#define DC_FIDELITY_LOG_UNLOAD							256	// Unloading of sounds.
+#define DC_FIDELITY_LOG_TIMED_SETUP						512	// Set up timed delay sound.
 
 // Logging control flag.
-#define DC_FIDELITY_LOG						DC_FIDELITY_LOG_LOAD + DC_FIDELITY_LOG_FAIL_CATEGORY + DC_FIDELITY_LOG_FAIL_TYPE + DC_FIDELITY_LOG_FAIL_INDEX + DC_FIDELITY_LOG_FAIL_SAMPLE + DC_FIDELITY_LOG_PLAY + DC_FIDELITY_LOG_UNLOAD + DC_FIDELITY_LOG_TIMED_SETUP
+#define DC_FIDELITY_LOG						DC_FIDELITY_LOG_LOAD + DC_FIDELITY_LOG_CATEGORY_TYPE_NOT_FOUND + DC_FIDELITY_LOG_PLAY + DC_FIDELITY_LOG_UNLOAD + DC_FIDELITY_LOG_TIMED_SETUP
 
 // Sound Categories
 //
@@ -156,6 +155,7 @@
 #define DC_FIDELITY_DEFAULT_SOUND_CHANCE					1.0
 #define DC_FIDELITY_DEFAULT_SOUND_LOCATION_BALANCE			1		// Adjust volume based on a given X position in relation to screen.
 #define DC_FIDELITY_DEFAULT_SOUND_LOCATION_FADE				0		// Adjust volume based on a given Z position in relation to screen.
+#define DC_FIDELITY_DEFAULT_SOUND_LOCATION_POS_X			openborvariant("hresolution") / 2	// Default X position to use for sound balance when entity position is not available.
 #define DC_FIDELITY_DEFAULT_SOUND_LOOP						0
 #define DC_FIDELITY_DEFAULT_SOUND_PRIORITY					1
 #define DC_FIDELITY_DEFAULT_SOUND_SPEED						100

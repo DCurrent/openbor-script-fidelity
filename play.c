@@ -21,7 +21,8 @@ int dc_fidelity_get_entity_sound(int type)
 	// Get target entity.
 	ent = dc_fidelity_get_entity();
 
-	model = getentityproperty(ent, "model");
+	model = getentityproperty(ent, "defaultmodel");
+	
 
 	// Now that we have a model, run model sound function 
 	// to get a sample ID.
@@ -97,6 +98,27 @@ int dc_fidelity_find_category_sound(char category, int type)
 		return DC_FIDELITY_SAMPLE_NONE;
 	}
 
+	// If category is blank, get() fails and shuts down. Let's 
+	// handle it here.
+	if (typeof(category) == openborconstant("VT_EMPTY"))
+	{
+		// Log error.
+		if (DC_FIDELITY_LOG & DC_FIDELITY_LOG_CATEGORY_MISSING)
+		{
+			log("\n\n");
+			log("Error: " + DC_FIDELITY_BASE_ID);
+			log("\n\t Missing category.");
+			log("\n\t dc_fidelity_find_category_sound(category: " + category + ", type: " + type + ")");
+			log("\n");
+		}
+
+		// Fall back to global.
+		if (DC_FIDELITY_DEFAULT_GLOBAL_FALLBACK)
+		{
+			category = DC_FIDELITY_CATEGORY_GLOBAL;
+		}
+	}	
+
 	// Each category entry is an array of types. Here we get the
 	// type array pointer.
 	type_list = get(category_list, category);
@@ -105,13 +127,21 @@ int dc_fidelity_find_category_sound(char category, int type)
 	// requested category, we don't have a list of types.
 	if (!type_list)
 	{
+		if (DC_FIDELITY_LOG & DC_FIDELITY_LOG_CATEGORY_TYPE_NOT_FOUND)
+		{
+			log("\n\n");
+			log("Error: " + DC_FIDELITY_BASE_ID);
+			log("\n\t Entry not found in category list.");
+			log("\n\t dc_fidelity_find_category_sound(category: " + category + ", type: " + type + ")");
+			log("\n");
+		}
+
 		return DC_FIDELITY_SAMPLE_NONE;
 	}
 
 	// Each type is an array of sample IDs. Here we get
 	// the sound array pointer.
-	index_list = get(type_list, type);		
-
+	index_list = get(type_list, type);
 
 	// Send the sound array pointer to sound selection function.
 	// It will choose an element from the array either manually 
@@ -189,7 +219,7 @@ int dc_fidelity_quick_play(int type)
 	sample_id = dc_fidelity_get_entity_sound(type);
 
 	// Send to play balanced and return result.
-	dc_fidelity_play_balanced(sample_id);
+	return dc_fidelity_play_balanced(sample_id);
 }
 
 // Caskey, Damon V.
@@ -230,9 +260,31 @@ int dc_fidelity_play_balanced(int sample_id)
 	volume_left = dc_fidelity_get_sound_volume_main_left();
 	volume_right = dc_fidelity_get_sound_volume_main_right();
 
-	// Get entity X position.
+	// Get entity X position. It's possible for an entity to become
+	// invalid after calling a for a sound, so verify first and
+	// apply a default value if we have to.
 	ent = dc_fidelity_get_entity();
-	pos_x = get_entity_property(ent, "position_x");
+
+	if (typeof(ent) == openborconstant("VT_PTR"))
+	{
+		pos_x = get_entity_property(ent, "position_x");
+	}
+	else
+	{
+		// Log error.
+		if (DC_FIDELITY_LOG & DC_FIDELITY_LOG_BALANCE_INVALID_ENTITY)
+		{
+			log("\n\n");
+			log("Error: " + DC_FIDELITY_BASE_ID);
+			log("\n\t Entry not found in category list.");
+			log("\n\t dc_fidelity_play_balanced(sample_id: " + sample_id + ")");
+			log("\n");
+		}
+
+		// Apply default position.
+		pos_x = DC_FIDELITY_DEFAULT_SOUND_LOCATION_POS_X;
+	}
+		
 
 	// Get adjusted volumes.
 	if (dc_fidelity_get_sound_location_balance())
