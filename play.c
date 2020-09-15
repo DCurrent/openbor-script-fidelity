@@ -394,6 +394,12 @@ void dc_fidelity_play_timed()
 			sample_id = get(timed_sample, DC_FIDELITY_TIMED_SAMPLE_SAMPLE_ID);
 			ent = get(timed_sample, DC_FIDELITY_TIMED_SAMPLE_ENTITY);
 
+			// Destroy timed sample array and remove 
+			// element from list.
+			free(timed_sample);
+			delete(timed_list, i);
+
+			// Ensure entity is valid and alive.
 			if (!get_entity_property(ent, "exists"))
 			{
 				continue;
@@ -406,12 +412,6 @@ void dc_fidelity_play_timed()
 
 			dc_fidelity_set_entity(ent);
 			dc_fidelity_play_balanced(sample_id);
-
-			// Destroy timed sample array and remove 
-			// element from list.
-			free(timed_sample);
-
-			delete(timed_list, i);
 		}
 	}
 }
