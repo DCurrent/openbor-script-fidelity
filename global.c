@@ -3,7 +3,7 @@
 // Try global category when specific category doesn't have sound type.
 
 // Get
-void dc_fidelity_get_global_fallback()
+void dc_fidelity_get_member_global_fallback()
 {
 	char id;
 	void result;
@@ -22,7 +22,7 @@ void dc_fidelity_get_global_fallback()
 }
 
 // Set
-void dc_fidelity_set_global_fallback(void value)
+void dc_fidelity_set_member_global_fallback(void value)
 {
 	char id;
 

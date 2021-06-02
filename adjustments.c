@@ -4,7 +4,7 @@
 // in relation to screen position, volume balance is 
 // adjusted to create a true location based stereo
 // effect.
-void dc_fidelity_set_sound_location_balance(int value)
+void dc_fidelity_set_member_sound_location_balance(int value)
 {
 	char id;
 
@@ -21,7 +21,7 @@ void dc_fidelity_set_sound_location_balance(int value)
 	setlocalvar(id, value);
 }
 
-int dc_fidelity_get_sound_location_balance()
+int dc_fidelity_get_member_sound_location_balance()
 {
 	char id;
 

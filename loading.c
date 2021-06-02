@@ -19,7 +19,7 @@ void dc_fidelity_setup(char category, int type, char file)
 	int i;		// Loop index.
 
 	// Get the category list array.
-	category_list = dc_fidelity_get_category_list();
+	category_list = dc_fidelity_get_member_category_list();
 
 	// Initialize array if it doesn't exist.
 	if (!category_list)
@@ -29,7 +29,7 @@ void dc_fidelity_setup(char category, int type, char file)
 
 		// Store pointer to array in a globalvar for
 		// future access.
-		dc_fidelity_set_category_list(category_list);
+		dc_fidelity_set_member_category_list(category_list);
 	}
 
 	// Get array of sound types for a category.
@@ -71,7 +71,7 @@ void dc_fidelity_setup(char category, int type, char file)
 	// value with sample ID.
 	add(index_list, size, sample_id);
 
-	if (DC_FIDELITY_LOG & DC_FIDELITY_LOG_LOAD)
+	if (DC_FIDELITY_LOG_LOAD)
 	{
 		// Output to the log.
 		log("\n Sound sample loaded: ");

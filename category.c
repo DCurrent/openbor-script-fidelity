@@ -1,7 +1,7 @@
 #include "data/scripts/dc_fidelity/config.h"
 
 // Get
-void dc_fidelity_get_category_list()
+void dc_fidelity_get_member_category_list()
 {
 	char id;
 	void result;
@@ -20,7 +20,7 @@ void dc_fidelity_get_category_list()
 }
 
 // Set
-void dc_fidelity_set_category_list(void value)
+void dc_fidelity_set_member_category_list(void value)
 {
 	char id;
 

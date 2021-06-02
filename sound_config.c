@@ -16,7 +16,7 @@
 // 0.0 = Never
 // 0.5 = 50%
 // 1.0 = Always.
-void dc_fidelity_set_sound_chance(float value)
+void dc_fidelity_set_member_sound_chance(float value)
 {
 	char id;
 
@@ -33,7 +33,7 @@ void dc_fidelity_set_sound_chance(float value)
 	setlocalvar(id, value);
 }
 
-void dc_fidelity_get_sound_chance()
+void dc_fidelity_get_member_sound_chance()
 {
 	void result;
 	char id;
@@ -46,7 +46,7 @@ void dc_fidelity_get_sound_chance()
 	{
 		result = DC_FIDELITY_DEFAULT_SOUND_CHANCE;
 	}
-
+	
 	return result;
 }
 
@@ -54,7 +54,7 @@ void dc_fidelity_get_sound_chance()
 // Defaults to random, which causes a random element
 // to be selected from all indexes available for
 // a selected sound type.
-void dc_fidelity_set_sound_element(int value)
+void dc_fidelity_set_member_sound_element(int value)
 {
 	char id;
 
@@ -71,7 +71,7 @@ void dc_fidelity_set_sound_element(int value)
 	setlocalvar(id, value);
 }
 
-int dc_fidelity_get_sound_element()
+int dc_fidelity_get_member_sound_element()
 {
 	char id;
 
@@ -90,7 +90,7 @@ int dc_fidelity_get_sound_element()
 // Enables auto fade. As a location moves lateraly
 // in relation to screen position, volume is adjusted
 // to create a distance based fade effect.
-void dc_fidelity_set_sound_location_fade(int value)
+void dc_fidelity_set_member_sound_location_fade(int value)
 {
 	char id;
 
@@ -107,7 +107,7 @@ void dc_fidelity_set_sound_location_fade(int value)
 	setlocalvar(id, value);
 }
 
-int dc_fidelity_get_sound_location_fade()
+int dc_fidelity_get_member_sound_location_fade()
 {
 	char id;
 
@@ -124,7 +124,7 @@ int dc_fidelity_get_sound_location_fade()
 }
 
 // Sound looping on playback.
-void dc_fidelity_set_sound_loop(int value)
+void dc_fidelity_set_member_sound_loop(int value)
 {
 	char id;
 
@@ -141,7 +141,7 @@ void dc_fidelity_set_sound_loop(int value)
 	setlocalvar(id, value);
 }
 
-int dc_fidelity_get_sound_loop()
+int dc_fidelity_get_member_sound_loop()
 {
 	char id;
 
@@ -158,7 +158,7 @@ int dc_fidelity_get_sound_loop()
 }
 
 // Priority of sound when played on same channel.
-void dc_fidelity_set_sound_priority(int value)
+void dc_fidelity_set_member_sound_priority(int value)
 {
 	char id;
 
@@ -175,7 +175,7 @@ void dc_fidelity_set_sound_priority(int value)
 	setlocalvar(id, value);
 }
 
-int dc_fidelity_get_sound_priority()
+int dc_fidelity_get_member_sound_priority()
 {
 	char id;
 
@@ -196,7 +196,7 @@ int dc_fidelity_get_sound_priority()
 // result in a lower pitch. As an example of this effect, 
 // OpenBOR’s native sound effect system plays hit impact 
 // sounds at lower speeds as greater damage is inflicted. 
-void dc_fidelity_set_sound_speed(int value)
+void dc_fidelity_set_member_sound_speed(int value)
 {
 	char id;
 
@@ -214,7 +214,7 @@ void dc_fidelity_set_sound_speed(int value)
 }
 
 // Get specified speed, or default if not available.
-int dc_fidelity_get_sound_speed()
+int dc_fidelity_get_member_sound_speed()
 {
 	char id;
 
@@ -233,7 +233,7 @@ int dc_fidelity_get_sound_speed()
 // Volume is the intitial left and right channel 
 // playback volume before any auto adjustments
 // are made. 
-void dc_fidelity_set_sound_volume_main_left(int value)
+void dc_fidelity_set_member_sound_volume_main_left(int value)
 {
 	char id;
 
@@ -250,7 +250,7 @@ void dc_fidelity_set_sound_volume_main_left(int value)
 	setlocalvar(id, value);
 }
 
-int dc_fidelity_get_sound_volume_main_left()
+int dc_fidelity_get_member_sound_volume_main_left()
 {
 	char id;
 
@@ -272,7 +272,7 @@ int dc_fidelity_get_sound_volume_main_left()
 	return result;
 }
 
-void dc_fidelity_set_sound_volume_main_right(int value)
+void dc_fidelity_set_member_sound_volume_main_right(int value)
 {
 	char id;
 
@@ -289,7 +289,7 @@ void dc_fidelity_set_sound_volume_main_right(int value)
 	setlocalvar(id, value);
 }
 
-int dc_fidelity_get_sound_volume_main_right()
+int dc_fidelity_get_member_sound_volume_main_right()
 {
 	char id;
 

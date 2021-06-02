@@ -5,97 +5,104 @@
 #include "data/scripts/dc_instance/main.c"
 #include "data/scripts/dc_d20/main.c"
 
-// Name of library. Used mainly as a base for variable IDs. Must
-// be unique vs all other libraries. Try to keep it short.
+/** Library Name
+* 
+* Used mainly as a base for variable IDs. Must
+* be unique vs all other libraries. Try to keep it short.
+**/
 #define DC_FIDELITY_BASE_ID		"dcfid"
 
-// Miscellaneous
-// Max volume engine allows for sound effects. We use this as a
-// limiter because the menu allows much higher settings, but 
-// the engine overrides them as the sound is played. The engine 
-// does this for backward compatibility with older modules, but 
-// it does present a problem for us.
-//
-// This can potentially ruin calculations like auto balance
-// by location, because the engine sends us the menu values.
-// Those can be (and probably are) much higher than the engine
-// limit. As a result, our own calculations might produce "low" 
-// values higher than the engine limit, and once the limit is 
-// imposed, there is then no difference at all between the 
-// final right/left channel volumes. 
-//
-// We don't want to arbitrarily override the volume in case
-// player sets menu values LOWER than engine limit though.
-// Instead, we will apply this value in our "get" functions
-// for main volume if the get value is higher, but not lower.
-//
-// If later engine updates allow higher volume, we can increase 
-// or eliminate this fix.
+/** Max Volume
+* 
+* This is the max volume engine allows for sound effects. 
+* In theory we don't need this. The engine allows us to 
+* read the menu option for sound volume. Unfortunatly there
+* is a hidden hard coded volume cap applied to all sounds
+* during playback. This is done for backward compatibility 
+* with older modules, but it does present a problem for us.
+* 
+* Chiefly, the menu values are almost always much higher than 
+* the hard code limit. As a result, our own calculations 
+* might produce "low" values that also exceed the hard code 
+* limit. When we play our sound, the engine subsequently 
+* caps the playback volume and so our dynamic volume 
+* calculations appear to fail.
+* 
+* To solve this problem, we include a value here that at time
+* of writing is identical to engine’s hidden volume cap. When
+* we request current volume level from the engine, we’ll cap 
+* the result to this value before beginning any calculations. 
+* This ensures our calculations stay within the engine cap 
+* while also respecting player wishes if they set a lower 
+* volume in the menu.
+* 
+* If later engine updates allow higher volume, we can increase 
+* or eliminate this fix.
+**/
 #define DC_FIDELITY_ENGINE_MAX_VOLUME 64
 
-// Logging. Controls what processes get logged for debugging. 
-// Uses a bit masked macro, so add desired options to the
-// control flag. Note some "fail" conditions may be intentional, 
-// such as calling for a sound type a category does not have
-// and falling back to the global category.
+/* 
+* Logging. 
+*
+* Enable flags to log events.
+*/
 
-// Logging options.
 #define DC_FIDELITY_LOG_LOAD							1	// Loading and setup of sound files.
-#define DC_FIDELITY_LOG_BALANCE_INVALID_ENTITY			2	// Entity is not valid pointer (probably NULL). 
-#define DC_FIDELITY_LOG_CATEGORY_MISSING				4   // Category argument is blank. 
-#define DC_FIDELITY_LOG_CATEGORY_TYPE_NOT_FOUND			8	// Specified category (containing a type list) not found.
-#define DC_FIDELITY_LOG_PLAY							128	// Sound plays.
-#define DC_FIDELITY_LOG_UNLOAD							256	// Unloading of sounds.
-#define DC_FIDELITY_LOG_TIMED_SETUP						512	// Set up timed delay sound.
+#define DC_FIDELITY_LOG_BALANCE_INVALID_ENTITY			1	// Entity is not valid pointer (probably NULL). 
+#define DC_FIDELITY_LOG_CATEGORY_MISSING				1   // Category argument is blank. 
+#define DC_FIDELITY_LOG_CATEGORY_TYPE_NOT_FOUND			1	// Specified category (containing a type list) not found.
+#define DC_FIDELITY_LOG_PLAY							1	// Sound plays.
+#define DC_FIDELITY_LOG_UNLOAD							1	// Unloading of sounds.
+#define DC_FIDELITY_LOG_TIMED_SETUP						1	// Set up timed delay sound.
+				
 
-// Logging control flag.
-#define DC_FIDELITY_LOG						DC_FIDELITY_LOG_LOAD + DC_FIDELITY_LOG_CATEGORY_TYPE_NOT_FOUND + DC_FIDELITY_LOG_PLAY + DC_FIDELITY_LOG_UNLOAD + DC_FIDELITY_LOG_TIMED_SETUP
-
-// Sound Categories
-//
-// Normally sound categories are given the name of a model. 
-// When an entity is instructed to play
-// a type of sound (see below), its base model is 
-// used to select the category. This is not a 
-// requirement though, it is just the default
-// behavior. You can load sounds with whatever you
-// feel like as a category name and override the 
-// sound system's default automatic category selection
-// when playing a sound type.
-//
-// This is a list of predefined custom categories. 
-// One example might be global whiff or hit sounds. 
-// You aren't required to use this list when you 
-// create custom categories, but it's a good idea 
-// just to keep yourself organized. Add as many
-// categories as you wish, just make sure they are 
-// unique to each other and don't match any of your 
-// model names.
-//
-// Note: DC_FIDELITY_CATEGORY_GLOBAL is a special category 
-// used as a default fallback (you can switch this behavior 
-// off). If a sound type does not exist for the requested 
-// category, the sound system will look for that type in 
-// the global category instead. If the type is not found 
-// in global category either, no sound is played.
+/** Sound Categories
+*
+* Normally sound categories are the name of a model. 
+* When an entity is instructed to play
+* a type of sound (see below), we use its base
+* model name to select the category. This is not a 
+* requirement though, it is just the default
+* behavior. You can load sounds with any category 
+* name you like and override the sound system's 
+* automatic category selection when playing a 
+* sound type.
+*
+* This is a list of predefined custom categories. 
+* One example might be global whiff or hit sounds. 
+* You aren't required to use this list when you 
+* create custom categories, but it's a good idea 
+* just to keep yourself organized. Add as many
+* categories as you wish, just make sure they are 
+* unique to each other and don't match any of your 
+* model names.
+*
+* Note: DC_FIDELITY_CATEGORY_GLOBAL is a special category 
+* used as a default fallback (you can switch this behavior 
+* off). If a sound type does not exist for the requested 
+* category, the sound system will look for that type in 
+* the global category instead. If the type is not found 
+* in global category either, no sound is played.
+**/
 #define DC_FIDELITY_CATEGORY_GLOBAL			0
 #define DC_FIDELITY_CATEGORY_MALE			1
 #define DC_FIDELITY_CATEGORY_FEMALE			2
 
-// Sound Types.
-//
-// Sound types are the specific types of sounds you 
-// assign to each category (see above), and then instruct 
-// the sound system to play. For instance, a model's
-// voice effect when making a heavy attack. Each type 
-// can be loaded mutiple times with different sound 
-// files, in which case the sound will be picked 
-// randomly each time the play function is executed.
-//
-// As with categories, feel free to create and use
-// sound types at your discretion. 
+/** Sound Types
+*
+* Sound types are the specific types of sounds you 
+* assign to each category (see above), and then instruct 
+* the sound system to play. For instance, a model's
+* voice effect when making a heavy attack. Each type 
+* can be loaded mutiple times with different sound 
+* files, in which case the sound will be picked 
+* randomly each time the play function is executed.
+*
+* As with categories, feel free to create and use
+* sound types at your discretion. 
+**/
 
-// Sound effects.
+/** Sound effects. **/
 #define DC_FIDELITY_TYPE_SOUND_SPAWN				0	// Spawn sound.
 #define DC_FIDELITY_TYPE_SOUND_ATTACK_HEAVY			1	// "Air" sound, heavy attacks.
 #define DC_FIDELITY_TYPE_SOUND_ATTACK_HEAVY_BLADE	2	// "Air" sound, heavy attacks (blade).
@@ -110,9 +117,11 @@
 #define DC_FIDELITY_TYPE_SOUND_IMPACT_MEDIUM		11	// Attack hit sound, medium attacks.
 #define DC_FIDELITY_TYPE_SOUND_IMPACT_MEDIUM_BLADE	12	// Attack hit sound, medium attacks (blade).
 
-// Voices.
+#define DC_FIDELITY_TYPE_SOUND_ELETRCITY_0			"elec_0"
+
+/** Voices. **/
 #define DC_FIDELITY_TYPE_VOICE_ATTACK_COMMAND		13	// Attack saying. - "Let's get them!", or "Ready your weapon! Let's go!"
-#define DC_FIDELITY_TYPE_VOICE_ATTACK_FAIL			14	// Attack did nothing.- "This guy is invincible!", "Oh crap, not a scrath!", ...
+#define DC_FIDELITY_TYPE_VOICE_ATTACK_FAIL			14	// Attack did nothing.- "This guy is invincible!", "Oh crap, not a scratch!", ...
 #define DC_FIDELITY_TYPE_VOICE_ATTACK_SHOUT_HEAVY	15	// Yalp while attacking. - Ha! ya! ...
 #define DC_FIDELITY_TYPE_VOICE_ATTACK_SHOUT_LIGHT	16	// Yalp while attacking. - Ha! ya! ...
 #define DC_FIDELITY_TYPE_VOICE_ATTACK_SHOUT_MEDIUM	17	// Yalp while attacking. - Ha! ya! ...
@@ -122,7 +131,7 @@
 #define DC_FIDELITY_TYPE_VOICE_BATTLE_TAUNT			21	// In battle taunt (Ex. After a knockdown) - "You suck!", "Take that loser!", ...
 #define DC_FIDELITY_TYPE_VOICE_BORED				22	// Bored saying. - "For fighters we seem to be doing little fighting", "This is certainly one way of not getting anywhere.", ...
 #define DC_FIDELITY_TYPE_VOICE_CAN_DO				23	// Comply to a task request. - "Sure thing, I'll take care of it.", "I got this.", ...
-#define DC_FIDELITY_TYPE_VOICE_CANT_DO				24	// Can't do a task. - "Sorry, no can do.", "No I can do that.", ...
+#define DC_FIDELITY_TYPE_VOICE_CANT_DO				24	// Can't do a task. - "Sorry, no can do.", "No I can't do that.", ...
 #define DC_FIDELITY_TYPE_VOICE_CHEER				25	// Exclamation of joy saying. - "Hurrah!", "Yes! All right!.", ...
 #define DC_FIDELITY_TYPE_VOICE_CUSS					26	// Pissed off. - "Damn it!", "Son of a bitch!", ...
 #define DC_FIDELITY_TYPE_VOICE_ENCUMBERED			27	// Load is too heavy. - "I'm not a pack mule!", "I have to lighten this load!", ...
@@ -168,12 +177,21 @@
 #define DC_FIDELITY_TYPE_VOICE_THREATEN				67	// Warning. - "You're messing with the wrong guy.", "Keep it up and I'll knock you into last week, so you can wait until now for me to kick your ass again!"
 #define DC_FIDELITY_TYPE_VOICE_YES					68	// Agree. - "Sure.", "Yes.", ...
 
-// Options.
-#define DC_FIDELITY_INDEX_RANDOM	-1		// Seek a random sound index from sound type.
-#define DC_FIDELITY_SAMPLE_NONE		-1		// No sample, or invalid sample.		
+/** Operation flags
+*
+* These flags control general operation and
+* default behaviors. You should leave them
+* alone unles you really know what you're doing.
+**/
 
-// Default values.
+/** Options **/
+#define DC_FIDELITY_INDEX_RANDOM	-1		// Seek a random sound index from sound type.
+#define DC_FIDELITY_SAMPLE_NONE		-1		// No sample, or invalid sample.
+#define DC_FIDELITY_MODEL_NAME_AUTO	"-1"	// Get model name from entity.
+
+/** Default values **/
 #define DC_FIDELITY_DEFAULT_ENT								getlocalvar("self")
+#define DC_FIDELITY_DEFAULT_MODEL_NAME						DC_FIDELITY_MODEL_NAME_AUTO
 #define DC_FIDELITY_DEFAULT_CATEGORY_LIST					NULL()
 #define DC_FIDELITY_DEFAULT_GLOBAL_FALLBACK					1		// Try global category when specific category doesn't have sound type.
 #define DC_FIDELITY_DEFAULT_SOUND_CHANCE					1.0
@@ -188,16 +206,16 @@
 #define DC_FIDELITY_DEFAULT_TIMED_LIST						NULL()
 
 
-// Static values.
+/** Static values **/
 #define DC_FIDELITY_TIMED_SAMPLE_ARRAY_SIZE	3
 #define DC_FIDELITY_TIMED_SAMPLE_SAMPLE_ID	0
 #define DC_FIDELITY_TIMED_SAMPLE_TIME		1
 #define DC_FIDELITY_TIMED_SAMPLE_ENTITY		2
 
-// Variable keys.
-#define DC_FIDELITY_MEMBER_INSTANCE							DC_FIDELITY_BASE_ID + 0
-#define DC_FIDELITY_MEMBER_ENT								DC_FIDELITY_BASE_ID + 1		
-#define DC_FIDELITY_MEMBER_GLOBAL_FALLBACK					DC_FIDELITY_BASE_ID + 2	
+/** Variable keys **/
+#define DC_FIDELITY_MEMBER_ENT								DC_FIDELITY_BASE_ID + 0		
+#define DC_FIDELITY_MEMBER_GLOBAL_FALLBACK					DC_FIDELITY_BASE_ID + 1	
+#define DC_FIDELITY_MEMBER_MODEL_NAME						DC_FIDELITY_BASE_ID + 2	
 #define DC_FIDELITY_MEMBER_SOUND_CATEGORY					DC_FIDELITY_BASE_ID + 3		// Global var used to store list of categories -> types ->indexes.
 #define DC_FIDELITY_MEMBER_SOUND_CHANCE						DC_FIDELITY_BASE_ID + 4
 #define DC_FIDELITY_MEMBER_SOUND_ELEMENT					DC_FIDELITY_BASE_ID + 5
@@ -212,15 +230,27 @@
 #define DC_FIDELITY_MEMBER_TIMED_LIST						DC_FIDELITY_BASE_ID + 14	// Global var used to store list of samples to play at later time.
 #define DC_FIDELITY_MEMBER_THE_END							15							// Should always be last, with a value one higher than previous key ID.
 
-// Instance control. 
-#define dc_fidelity_get_instance()		dc_instance_get(DC_FIDELITY_MEMBER_INSTANCE)
-#define dc_fidelity_set_instance(value) dc_instance_set(DC_FIDELITY_MEMBER_INSTANCE, value)
-#define dc_fidelity_reset_instance()	dc_instance_reset(DC_FIDELITY_BASE_ID, DC_FIDELITY_MEMBER_INSTANCE, DC_FIDELITY_MEMBER_THE_END)
-#define dc_fidelity_free_instance()		dc_instance_free(DC_FIDELITY_BASE_ID, DC_FIDELITY_MEMBER_INSTANCE, DC_FIDELITY_MEMBER_THE_END)
-#define dc_fidelity_dump_instance()		dc_instance_dump(DC_FIDELITY_BASE_ID, DC_FIDELITY_MEMBER_INSTANCE, DC_FIDELITY_MEMBER_THE_END)
-#define dc_fidelity_export_instance()	dc_instance_export(DC_FIDELITY_BASE_ID, DC_FIDELITY_MEMBER_INSTANCE, DC_FIDELITY_MEMBER_THE_END)
-#define dc_fidelity_import_instance()	dc_instance_import(DC_FIDELITY_BASE_ID, DC_FIDELITY_MEMBER_INSTANCE, DC_FIDELITY_MEMBER_THE_END)
-#define dc_fidelity_free_export()		dc_instance_free_export(DC_FIDELITY_BASE_ID, DC_FIDELITY_MEMBER_INSTANCE, DC_FIDELITY_MEMBER_THE_END)
+/** Instance control 
+* 
+* Instance control allows us to run more than 
+* one copy (instance) of a library without the
+* instances conflicting with each other. 
+* 
+* To avoid repeat code, there is a library 
+* dedicated specifically to instance control. 
+* This section overrides local function names
+* with instance control library functions to 
+* simplify use of the the instance control 
+* library.
+**/ 
+#define dc_fidelity_get_instance()		dc_instance_get(DC_FIDELITY_BASE_ID)
+#define dc_fidelity_set_instance(value) dc_instance_set(DC_FIDELITY_BASE_ID, value)
+#define dc_fidelity_reset_instance()	dc_instance_reset(DC_FIDELITY_BASE_ID, DC_FIDELITY_MEMBER_THE_END)
+#define dc_fidelity_free_instance()		dc_instance_free(DC_FIDELITY_BASE_ID, DC_FIDELITY_MEMBER_THE_END)
+#define dc_fidelity_dump_instance()		dc_instance_dump(DC_FIDELITY_BASE_ID, DC_FIDELITY_MEMBER_THE_END)
+#define dc_fidelity_export_instance()	dc_instance_export(DC_FIDELITY_BASE_ID, DC_FIDELITY_MEMBER_THE_END)
+#define dc_fidelity_import_instance()	dc_instance_import(DC_FIDELITY_BASE_ID, DC_FIDELITY_MEMBER_THE_END)
+#define dc_fidelity_free_export()		dc_instance_free_export(DC_FIDELITY_BASE_ID, DC_FIDELITY_MEMBER_THE_END)
 
 #endif // !DC_FIDELITY_CONFIG
 

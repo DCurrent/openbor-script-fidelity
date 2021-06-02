@@ -2,7 +2,7 @@
 #import "data/scripts/dc_fidelity/entity.c"
 
 // Get
-void dc_fidelity_get_timed_list()
+void dc_fidelity_get_member_timed_list()
 {
 	char id;
 	void result;
@@ -21,7 +21,7 @@ void dc_fidelity_get_timed_list()
 }
 
 // Set
-void dc_fidelity_set_timed_list(void value)
+void dc_fidelity_set_member_timed_list(void value)
 {
 	char id;
 
@@ -61,11 +61,11 @@ void dc_fidelity_timed_setup(int sample_id, int delay)
 	//  Set the sample to play data.
 	set(timed_sample, DC_FIDELITY_TIMED_SAMPLE_SAMPLE_ID, sample_id);
 	set(timed_sample, DC_FIDELITY_TIMED_SAMPLE_TIME, time);
-	set(timed_sample, DC_FIDELITY_TIMED_SAMPLE_ENTITY, dc_fidelity_get_entity());
+	set(timed_sample, DC_FIDELITY_TIMED_SAMPLE_ENTITY, dc_fidelity_get_member_entity());
 
 	// Get the timed list array. This array keeps a list
 	// of the timed sample arrays we just created.
-	timed_list = dc_fidelity_get_timed_list();
+	timed_list = dc_fidelity_get_member_timed_list();
 
 	// Initialize array if it doesn't exist.
 	if (timed_list == NULL())
@@ -75,7 +75,7 @@ void dc_fidelity_timed_setup(int sample_id, int delay)
 
 		// Store pointer to array in a globalvar for
 		// future access.
-		dc_fidelity_set_timed_list(timed_list);
+		dc_fidelity_set_member_timed_list(timed_list);
 	}
 
 	// Get the array size, we can use this as
@@ -86,9 +86,8 @@ void dc_fidelity_timed_setup(int sample_id, int delay)
 	// key with pointer to the timed sample array we
 	// created earlier.
 	add(timed_list, size, timed_sample);
-	
 
-	if (DC_FIDELITY_LOG & DC_FIDELITY_LOG_TIMED_SETUP)
+	if (DC_FIDELITY_LOG_TIMED_SETUP)
 	{
 		// Output to the log.
 		log("\n Timed sample loaded: ");
