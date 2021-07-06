@@ -12,6 +12,7 @@ void dc_fidelity_set_member_sound_location_balance(int value)
 
 	id = dc_fidelity_get_instance() + DC_FIDELITY_MEMBER_SOUND_LOCATION_BALANCE;
 
+	
 	if (DC_FIDELITY_DEFAULT_SOUND_LOCATION_BALANCE == value)
 	{
 		value = NULL();
@@ -57,6 +58,15 @@ int dc_fidelity_auto_balance_volume_left(float position, int volume)
 	float	result;
 	float	factor;
 	float	relative_position;
+
+	/* 
+	* If we aren't in a level, position variables
+	* throw errors. Just use supplied volume.
+	*/
+	if (!openborvariant("in_level"))
+	{
+		return volume;
+	}
 
 	/*
 	* To find out what volume to apply, we need to
@@ -104,8 +114,9 @@ int dc_fidelity_auto_balance_volume_left(float position, int volume)
 	*					0          240        480
 	*
 	* In OpenBOR, the screen's far left (0) in 
-	* relation to entire level is scroll X.
+	* relation to entire level is scroll X.	
 	*/
+
 	relative_position = position - (openborvariant("xpos"));
 	
 	/*
@@ -163,14 +174,12 @@ int dc_fidelity_auto_balance_volume_left(float position, int volume)
 /*
 * Caskey, Damon V.
 * 2020-07-06 (refactor from orginal function ~2010)
-* 
-* Accept position and volume. Applies stereo volume 
-* effect by reducing supplied volume equal to % of 
-* position from screen center toward opposite side 
-* of channel.
 *
-* See dc_fidelity_auto_balance_volume_left for full
-* documentation.
+* Accept position and volume. Applies stereo volume
+* effect by reducing supplied volume equal to % of
+* position from screen center toward opposite side
+* of channel. See dc_fidelity_auto_balance_volume_right()
+* for details.
 */
 int dc_fidelity_auto_balance_volume_right(float position, int volume)
 {
@@ -180,17 +189,30 @@ int dc_fidelity_auto_balance_volume_right(float position, int volume)
 	float	relative_position;
 
 	/*
+	* If we aren't in a level, position variables
+	* throw errors. Just use supplied volume.
+	*/
+	if (!openborvariant("in_level"))
+	{
+		return volume;
+	}
+
+	
+	/* 
 	* Get get 50% of current resolution. This works 
 	* as our maximum range.
 	*/
 	h_median = openborvariant("hResolution") * 0.5;
 
+	/* 
+	* Use scroll position and the supplied absolute
+	* position to get where we realative to the display
+	* screen.
+	*/
 	relative_position = position - (openborvariant("xpos"));
 
 	/* 
-	* Above or at median? That means we are are
-	* at or right of center, and there's no reason
-	* to waste time with more calculations. Just
+	* Above or at median? Just
 	* return supplied volume as is.
 	*/
 	if (relative_position >= h_median)
@@ -198,10 +220,9 @@ int dc_fidelity_auto_balance_volume_right(float position, int volume)
 		return volume;
 	}
 
-	/*
-	* We need to know how far we are into the
-	* opposite side of screen vs. our channel.
-	* Find % of relative_position vs. median.
+	/* 
+	* Find how far we are into the opposite 
+	* side of screen vs. our channel.
 	*/
 	factor = relative_position / h_median;
 
@@ -213,9 +234,8 @@ int dc_fidelity_auto_balance_volume_right(float position, int volume)
 	result = factor * volume;
 
 	/*
-	* Now round and truncate the result to get
-	* an integer value, then make sure it isn't
-	* below 0.
+	* Round and truncate the result to get
+	* an integer value of 0+.
 	*/
 	result = trunc(round(result));
 
